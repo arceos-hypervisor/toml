@@ -1,4 +1,5 @@
 use crate::de::Error;
+use alloc::vec::Vec;
 
 /// Deserializes table values into enum variants.
 pub(crate) struct TableEnumDeserializer {

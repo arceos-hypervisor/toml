@@ -1,6 +1,8 @@
-use std::borrow::Cow;
-use std::char;
-use std::ops::RangeInclusive;
+use alloc::borrow::Cow;
+use core::char;
+use core::ops::RangeInclusive;
+
+use alloc::string::String;
 
 use winnow::combinator::alt;
 use winnow::combinator::cut_err;
@@ -74,7 +76,7 @@ fn basic_chars<'i>(input: &mut Input<'i>) -> PResult<Cow<'i, str>> {
         // Deviate from the official grammar by batching the unescaped chars so we build a string a
         // chunk at a time, rather than a `char` at a time.
         take_while(1.., BASIC_UNESCAPED)
-            .try_map(std::str::from_utf8)
+            .try_map(core::str::from_utf8)
             .map(Cow::Borrowed),
         escaped.map(|c| Cow::Owned(String::from(c))),
     ))
@@ -200,7 +202,7 @@ fn mlb_content<'i>(input: &mut Input<'i>) -> PResult<Cow<'i, str>> {
         // Deviate from the official grammar by batching the unescaped chars so we build a string a
         // chunk at a time, rather than a `char` at a time.
         take_while(1.., MLB_UNESCAPED)
-            .try_map(std::str::from_utf8)
+            .try_map(core::str::from_utf8)
             .map(Cow::Borrowed),
         // Order changed fromg grammar so `escaped` can more easily `cut_err` on bad escape sequences
         mlb_escaped_nl.map(|_| Cow::Borrowed("")),
@@ -264,7 +266,7 @@ pub(crate) fn literal_string<'i>(input: &mut Input<'i>) -> PResult<&'i str> {
             cut_err(take_while(0.., LITERAL_CHAR)),
             cut_err(APOSTROPHE),
         )
-        .try_map(std::str::from_utf8)
+        .try_map(core::str::from_utf8)
         .context(StrContext::Label("literal string")),
     )
     .parse_next(input)
@@ -322,7 +324,7 @@ fn ml_literal_body<'i>(input: &mut Input<'i>) -> PResult<&'i str> {
         opt(mll_quotes(ML_LITERAL_STRING_DELIM.void())),
     )
         .recognize()
-        .try_map(std::str::from_utf8)
+        .try_map(core::str::from_utf8)
         .parse_next(input)
 }
 

@@ -121,7 +121,8 @@ impl serde::ser::Serializer for ValueSerializer {
         // intentionally controlled by the caller, or may even be
         // nondeterministic if it comes from arithmetic operations or a cast.
         if v.is_nan() {
-            v = v.copysign(1.0);
+            // v = v.copysign(1.0);
+            v = unsafe { core::intrinsics::copysignf64(v, 1.0) };
         }
         Ok(v.into())
     }

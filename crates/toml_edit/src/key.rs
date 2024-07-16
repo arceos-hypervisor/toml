@@ -1,5 +1,7 @@
-use std::borrow::Cow;
-use std::str::FromStr;
+use alloc::borrow::Cow;
+use core::str::FromStr;
+use alloc::vec::Vec;
+use alloc::string::String;
 
 use crate::repr::{Decor, Repr};
 use crate::InternalString;
@@ -104,6 +106,8 @@ impl Key {
     /// Returns a raw representation.
     #[cfg(feature = "display")]
     pub fn display_repr(&self) -> Cow<'_, str> {
+        use alloc::borrow::ToOwned;
+
         self.as_repr()
             .and_then(|r| r.as_raw().as_str())
             .map(Cow::Borrowed)
@@ -150,7 +154,7 @@ impl Key {
     /// The location within the original document
     ///
     /// This generally requires an [`ImDocument`][crate::ImDocument].
-    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+    pub fn span(&self) -> Option<core::ops::Range<usize>> {
         self.repr.as_ref().and_then(|r| r.span())
     }
 
@@ -198,7 +202,7 @@ impl Clone for Key {
     }
 }
 
-impl std::ops::Deref for Key {
+impl core::ops::Deref for Key {
     type Target = str;
 
     fn deref(&self) -> &Self::Target {
@@ -206,20 +210,20 @@ impl std::ops::Deref for Key {
     }
 }
 
-impl std::hash::Hash for Key {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+impl core::hash::Hash for Key {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
         self.get().hash(state);
     }
 }
 
 impl Ord for Key {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
         self.get().cmp(other.get())
     }
 }
 
 impl PartialOrd for Key {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
@@ -255,8 +259,8 @@ impl PartialEq<String> for Key {
 }
 
 #[cfg(feature = "display")]
-impl std::fmt::Display for Key {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Key {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         crate::encode::encode_key(self, f, None)
     }
 }
@@ -402,7 +406,7 @@ impl<'k> KeyMut<'k> {
     }
 }
 
-impl<'k> std::ops::Deref for KeyMut<'k> {
+impl<'k> core::ops::Deref for KeyMut<'k> {
     type Target = str;
 
     fn deref(&self) -> &Self::Target {
@@ -432,9 +436,9 @@ impl<'s> PartialEq<String> for KeyMut<'s> {
 }
 
 #[cfg(feature = "display")]
-impl<'k> std::fmt::Display for KeyMut<'k> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        std::fmt::Display::fmt(&self.key, f)
+impl<'k> core::fmt::Display for KeyMut<'k> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        core::fmt::Display::fmt(&self.key, f)
     }
 }
 
@@ -442,5 +446,6 @@ impl<'k> std::fmt::Display for KeyMut<'k> {
 #[cfg(feature = "parse")]
 #[cfg(feature = "display")]
 fn string_roundtrip() {
+    use alloc::string::ToString;
     Key::new("hello").to_string().parse::<Key>().unwrap();
 }

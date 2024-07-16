@@ -1,4 +1,7 @@
-use std::iter::FromIterator;
+use core::iter::FromIterator;
+use alloc::borrow::ToOwned;
+use alloc::vec::Vec;
+use alloc::boxed::Box;
 
 use crate::key::Key;
 use crate::repr::Decor;
@@ -15,7 +18,7 @@ pub struct InlineTable {
     pub(crate) implicit: bool,
     // prefix before `{` and suffix after `}`
     decor: Decor,
-    pub(crate) span: Option<std::ops::Range<usize>>,
+    pub(crate) span: Option<core::ops::Range<usize>>,
     // whether this is a proxy for dotted keys
     dotted: bool,
     pub(crate) items: KeyValuePairs,
@@ -102,25 +105,25 @@ impl InlineTable {
     /// values or their combination as needed).
     pub fn sort_values_by<F>(&mut self, mut compare: F)
     where
-        F: FnMut(&Key, &Value, &Key, &Value) -> std::cmp::Ordering,
+        F: FnMut(&Key, &Value, &Key, &Value) -> core::cmp::Ordering,
     {
         self.sort_values_by_internal(&mut compare);
     }
 
     fn sort_values_by_internal<F>(&mut self, compare: &mut F)
     where
-        F: FnMut(&Key, &Value, &Key, &Value) -> std::cmp::Ordering,
+        F: FnMut(&Key, &Value, &Key, &Value) -> core::cmp::Ordering,
     {
         let modified_cmp = |_: &InternalString,
                             val1: &TableKeyValue,
                             _: &InternalString,
                             val2: &TableKeyValue|
-         -> std::cmp::Ordering {
+         -> core::cmp::Ordering {
             match (val1.value.as_value(), val2.value.as_value()) {
                 (Some(v1), Some(v2)) => compare(&val1.key, v1, &val2.key, v2),
-                (Some(_), None) => std::cmp::Ordering::Greater,
-                (None, Some(_)) => std::cmp::Ordering::Less,
-                (None, None) => std::cmp::Ordering::Equal,
+                (Some(_), None) => core::cmp::Ordering::Greater,
+                (None, Some(_)) => core::cmp::Ordering::Less,
+                (None, None) => core::cmp::Ordering::Equal,
             }
         };
 
@@ -222,7 +225,7 @@ impl InlineTable {
     /// The location within the original document
     ///
     /// This generally requires an [`ImDocument`][crate::ImDocument].
-    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+    pub fn span(&self) -> Option<core::ops::Range<usize>> {
         self.span.clone()
     }
 
@@ -278,7 +281,7 @@ impl InlineTable {
         match self.items.entry(key.into()) {
             indexmap::map::Entry::Occupied(mut entry) => {
                 // Ensure it is a `Value` to simplify `InlineOccupiedEntry`'s code.
-                let scratch = std::mem::take(&mut entry.get_mut().value);
+                let scratch = core::mem::take(&mut entry.get_mut().value);
                 let scratch = Item::Value(
                     scratch
                         .into_value()
@@ -302,7 +305,7 @@ impl InlineTable {
         match self.items.entry(key.get().into()) {
             indexmap::map::Entry::Occupied(mut entry) => {
                 // Ensure it is a `Value` to simplify `InlineOccupiedEntry`'s code.
-                let scratch = std::mem::take(&mut entry.get_mut().value);
+                let scratch = core::mem::take(&mut entry.get_mut().value);
                 let scratch = Item::Value(
                     scratch
                         .into_value()
@@ -432,8 +435,8 @@ impl InlineTable {
 }
 
 #[cfg(feature = "display")]
-impl std::fmt::Display for InlineTable {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for InlineTable {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         crate::encode::encode_table(self, f, None, ("", ""))
     }
 }
@@ -690,7 +693,7 @@ impl<'a> InlineOccupiedEntry<'a> {
     /// Sets the value of the entry, and returns the entry's old value
     pub fn insert(&mut self, value: Value) -> Value {
         let mut value = Item::Value(value);
-        std::mem::swap(&mut value, &mut self.entry.get_mut().value);
+        core::mem::swap(&mut value, &mut self.entry.get_mut().value);
         value.into_value().unwrap()
     }
 

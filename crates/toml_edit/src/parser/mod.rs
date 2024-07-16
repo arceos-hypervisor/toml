@@ -1,6 +1,7 @@
 #![allow(clippy::type_complexity)]
 
-use std::cell::RefCell;
+use alloc::{string::ToString, vec::Vec};
+use core::cell::RefCell;
 pub(crate) mod array;
 pub(crate) mod datetime;
 pub(crate) mod document;
@@ -216,7 +217,7 @@ key = "value"
 "#,
         ];
         for input in documents {
-            dbg!(input);
+            // dbg!(input);
             let parsed = parse_document(input).map(|d| d.into_mut());
             let doc = match parsed {
                 Ok(doc) => doc,

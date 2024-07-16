@@ -122,7 +122,7 @@ impl VisitMut for NormalizeDependencyTablesVisitor {
             VisitState::Target | VisitState::TargetWithSpec | VisitState::Dependencies => {
                 // Top-level dependency row, or above: turn inline tables into regular ones.
                 if let Item::Value(Value::InlineTable(inline_table)) = node {
-                    let inline_table = std::mem::replace(inline_table, InlineTable::new());
+                    let inline_table = core::mem::replace(inline_table, InlineTable::new());
                     let table = inline_table.into_table();
                     key.fmt();
                     *node = Item::Table(table);
@@ -132,7 +132,7 @@ impl VisitMut for NormalizeDependencyTablesVisitor {
                 // Individual dependency: turn regular tables into inline ones.
                 if let Item::Table(table) = node {
                     // Turn the table into an inline table.
-                    let table = std::mem::replace(table, Table::new());
+                    let table = core::mem::replace(table, Table::new());
                     let inline_table = table.into_inline_table();
                     key.fmt();
                     *node = Item::Value(Value::InlineTable(inline_table));

@@ -13,6 +13,9 @@ pub(crate) use key::*;
 pub(crate) use map::*;
 
 use crate::visit_mut::VisitMut;
+use alloc::vec::Vec;
+use alloc::string::String;
+use crate::alloc::string::ToString;
 
 /// Errors that can occur when deserializing a type.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -35,7 +38,7 @@ pub enum Error {
 impl Error {
     pub(crate) fn custom<T>(msg: T) -> Self
     where
-        T: std::fmt::Display,
+        T: core::fmt::Display,
     {
         Error::Custom(msg.to_string())
     }
@@ -44,14 +47,14 @@ impl Error {
 impl serde::ser::Error for Error {
     fn custom<T>(msg: T) -> Self
     where
-        T: std::fmt::Display,
+        T: core::fmt::Display,
     {
         Self::custom(msg)
     }
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Error {
+    fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             Self::UnsupportedType(Some(t)) => write!(formatter, "unsupported {t} type"),
             Self::UnsupportedType(None) => write!(formatter, "unsupported rust type"),
@@ -77,7 +80,7 @@ impl From<Error> for crate::TomlError {
     }
 }
 
-impl std::error::Error for Error {}
+impl core::error::Error for Error {}
 
 /// Serialize the given data structure as a TOML byte vector.
 ///

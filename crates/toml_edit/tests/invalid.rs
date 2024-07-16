@@ -20,7 +20,7 @@ fn main() {
 }
 
 fn run_case(input: &[u8]) -> Result<(), String> {
-    let raw = std::str::from_utf8(input).map_err(|e| e.to_string())?;
+    let raw = core::str::from_utf8(input).map_err(|e| e.to_string())?;
     let _ = raw.parse::<DocumentMut>().map_err(|e| e.to_string())?;
     Ok(())
 }

@@ -1,5 +1,8 @@
-use std::borrow::Cow;
-use std::fmt::{Display, Formatter, Result, Write};
+use alloc::borrow::Cow;
+use core::fmt::{Display, Formatter, Result, Write};
+use alloc::vec::Vec;
+use alloc::string::{String, ToString};
+use alloc::borrow::ToOwned;
 
 use toml_datetime::Datetime;
 

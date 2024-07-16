@@ -1,4 +1,5 @@
-use std::ops::RangeInclusive;
+use core::ops::RangeInclusive;
+use alloc::vec::Vec;
 
 use winnow::combinator::peek;
 use winnow::combinator::separated;
@@ -73,7 +74,7 @@ pub(crate) fn simple_key(input: &mut Input<'_>) -> PResult<(RawString, InternalS
         "simple-key",
         dispatch! {peek(any);
             crate::parser::strings::QUOTATION_MARK => basic_string
-                .map(|s: std::borrow::Cow<'_, str>| s.as_ref().into()),
+                .map(|s: alloc::borrow::Cow<'_, str>| s.as_ref().into()),
             crate::parser::strings::APOSTROPHE => literal_string.map(|s: &str| s.into()),
             _ => unquoted_key.map(|s: &str| s.into()),
         }

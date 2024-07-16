@@ -1,5 +1,4 @@
 #![allow(missing_docs)]
-
 //! Document tree traversal to mutate an exclusive borrow of a document tree in place.
 //!
 //!
@@ -58,7 +57,7 @@
 //!             // Convert the float to a string.
 //!             let mut s = Formatted::new(format!("{:.2}", f.value()));
 //!             // Copy over the formatting.
-//!             std::mem::swap(s.decor_mut(), f.decor_mut());
+//!             core::mem::swap(s.decor_mut(), f.decor_mut());
 //!             *node = Value::String(s);
 //!         }
 //!         // Most of the time, you will also need to call the default implementation to recurse
@@ -89,6 +88,7 @@
 //! For a more complex example where the visitor has internal state, see `examples/visit.rs`
 //! [on GitHub](https://github.com/toml-rs/toml/blob/main/crates/toml_edit/examples/visit.rs).
 
+use alloc::string::String;
 use crate::{
     Array, ArrayOfTables, Datetime, DocumentMut, Formatted, InlineTable, Item, KeyMut, Table,
     TableLike, Value,

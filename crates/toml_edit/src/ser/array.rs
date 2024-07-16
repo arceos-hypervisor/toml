@@ -1,4 +1,5 @@
 use super::Error;
+use alloc::vec::Vec;
 
 #[doc(hidden)]
 pub struct SerializeValueArray {

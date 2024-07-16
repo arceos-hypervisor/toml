@@ -5,7 +5,7 @@ use crate::de::Error;
 
 /// Deserialization implementation for TOML [values][crate::Value].
 ///
-/// Can be created either directly from TOML strings, using [`std::str::FromStr`],
+/// Can be created either directly from TOML strings, using [`core::str::FromStr`],
 /// or from parsed [values][crate::Value] using [`serde::de::IntoDeserializer::into_deserializer`].
 ///
 /// # Example
@@ -246,7 +246,7 @@ impl crate::Item {
 }
 
 #[cfg(feature = "parse")]
-impl std::str::FromStr for ValueDeserializer {
+impl core::str::FromStr for ValueDeserializer {
     type Err = Error;
 
     /// Parses a value from a &str

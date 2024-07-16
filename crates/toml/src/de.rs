@@ -56,7 +56,7 @@ impl Error {
         Self { inner }
     }
 
-    pub(crate) fn add_key(&mut self, key: String) {
+    pub(crate) fn add_key(&mut self, key: alloc::string::String) {
         self.inner.add_key(key);
     }
 
@@ -67,7 +67,7 @@ impl Error {
 
     /// The start/end index into the original document where the error occurred
     #[cfg(feature = "parse")]
-    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+    pub fn span(&self) -> Option<core::ops::Range<usize>> {
         self.inner.span()
     }
 }
@@ -75,19 +75,19 @@ impl Error {
 impl serde::de::Error for Error {
     fn custom<T>(msg: T) -> Self
     where
-        T: std::fmt::Display,
+        T: core::fmt::Display,
     {
         Error::new(crate::edit::de::Error::custom(msg))
     }
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Error {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         self.inner.fmt(f)
     }
 }
 
-impl std::error::Error for Error {}
+impl core::error::Error for Error {}
 
 /// Deserialization TOML document
 ///

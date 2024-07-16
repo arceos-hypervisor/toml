@@ -1,4 +1,7 @@
-use std::iter::FromIterator;
+use alloc::borrow::ToOwned;
+use alloc::boxed::Box;
+use alloc::vec::Vec;
+use core::iter::FromIterator;
 
 use indexmap::map::IndexMap;
 
@@ -20,7 +23,7 @@ pub struct Table {
     //
     // `None` for user created tables (can be overridden with `set_position`)
     doc_position: Option<usize>,
-    pub(crate) span: Option<std::ops::Range<usize>>,
+    pub(crate) span: Option<core::ops::Range<usize>>,
     pub(crate) items: KeyValuePairs,
 }
 
@@ -125,20 +128,20 @@ impl Table {
     /// values or their combination as needed).
     pub fn sort_values_by<F>(&mut self, mut compare: F)
     where
-        F: FnMut(&Key, &Item, &Key, &Item) -> std::cmp::Ordering,
+        F: FnMut(&Key, &Item, &Key, &Item) -> core::cmp::Ordering,
     {
         self.sort_values_by_internal(&mut compare);
     }
 
     fn sort_values_by_internal<F>(&mut self, compare: &mut F)
     where
-        F: FnMut(&Key, &Item, &Key, &Item) -> std::cmp::Ordering,
+        F: FnMut(&Key, &Item, &Key, &Item) -> core::cmp::Ordering,
     {
         let modified_cmp = |_: &InternalString,
                             val1: &TableKeyValue,
                             _: &InternalString,
                             val2: &TableKeyValue|
-         -> std::cmp::Ordering {
+         -> core::cmp::Ordering {
             compare(&val1.key, &val1.value, &val2.key, &val2.value)
         };
 
@@ -245,7 +248,7 @@ impl Table {
     /// The location within the original document
     ///
     /// This generally requires an [`ImDocument`][crate::ImDocument].
-    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+    pub fn span(&self) -> Option<core::ops::Range<usize>> {
         self.span.clone()
     }
 
@@ -300,7 +303,9 @@ impl Table {
         // Accept a `&str` rather than an owned type to keep `InternalString`, well, internal
         match self.items.entry(key.into()) {
             indexmap::map::Entry::Occupied(entry) => Entry::Occupied(OccupiedEntry { entry }),
-            indexmap::map::Entry::Vacant(entry) => Entry::Vacant(VacantEntry { entry, key: None }),
+            indexmap::map::Entry::Vacant(entry) => {
+                Entry::Vacant(VacantEntry { entry, key: None })
+            }
         }
     }
 
@@ -434,8 +439,8 @@ impl Table {
 }
 
 #[cfg(feature = "display")]
-impl std::fmt::Display for Table {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Table {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let children = self.get_values();
         // print table body
         for (key_path, value) in children {
@@ -488,7 +493,7 @@ impl<'s> IntoIterator for &'s Table {
     }
 }
 
-pub(crate) type KeyValuePairs = IndexMap<InternalString, TableKeyValue>;
+pub(crate) type KeyValuePairs = IndexMap<InternalString, TableKeyValue, ahash::RandomState>;
 
 fn decorate_table(table: &mut Table) {
     for (mut key, value) in table
@@ -751,7 +756,7 @@ impl<'a> OccupiedEntry<'a> {
 
     /// Sets the value of the entry, and returns the entry's old value
     pub fn insert(&mut self, mut value: Item) -> Item {
-        std::mem::swap(&mut value, &mut self.entry.get_mut().value);
+        core::mem::swap(&mut value, &mut self.entry.get_mut().value);
         value
     }
 

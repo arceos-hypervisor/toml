@@ -18,6 +18,9 @@ use key::KeyDeserializer;
 use spanned::SpannedDeserializer;
 use table_enum::TableEnumDeserializer;
 
+use alloc::vec::Vec;
+use alloc::string::{String, ToString};
+
 pub use value::ValueDeserializer;
 
 /// Errors that can occur when deserializing a type.
@@ -27,9 +30,9 @@ pub struct Error {
 }
 
 impl Error {
-    pub(crate) fn custom<T>(msg: T, span: Option<std::ops::Range<usize>>) -> Self
+    pub(crate) fn custom<T>(msg: T, span: Option<core::ops::Range<usize>>) -> Self
     where
-        T: std::fmt::Display,
+        T: core::fmt::Display,
     {
         Error {
             inner: crate::TomlError::custom(msg.to_string(), span),
@@ -47,11 +50,11 @@ impl Error {
     }
 
     /// The start/end index into the original document where the error occurred
-    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+    pub fn span(&self) -> Option<core::ops::Range<usize>> {
         self.inner.span()
     }
 
-    pub(crate) fn set_span(&mut self, span: Option<std::ops::Range<usize>>) {
+    pub(crate) fn set_span(&mut self, span: Option<core::ops::Range<usize>>) {
         self.inner.set_span(span);
     }
 }
@@ -59,14 +62,14 @@ impl Error {
 impl serde::de::Error for Error {
     fn custom<T>(msg: T) -> Self
     where
-        T: std::fmt::Display,
+        T: core::fmt::Display,
     {
         Error::custom(msg, None)
     }
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Error {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         self.inner.fmt(f)
     }
 }
@@ -83,7 +86,7 @@ impl From<Error> for crate::TomlError {
     }
 }
 
-impl std::error::Error for Error {}
+impl core::error::Error for Error {}
 
 /// Convert a TOML [documents][crate::DocumentMut] into `T`.
 #[cfg(feature = "parse")]
@@ -101,7 +104,7 @@ pub fn from_slice<T>(s: &'_ [u8]) -> Result<T, Error>
 where
     T: DeserializeOwned,
 {
-    let s = std::str::from_utf8(s).map_err(|e| Error::custom(e, None))?;
+    let s = core::str::from_utf8(s).map_err(|e| Error::custom(e, None))?;
     from_str(s)
 }
 
@@ -154,7 +157,7 @@ impl<S> From<crate::ImDocument<S>> for Deserializer<S> {
 }
 
 #[cfg(feature = "parse")]
-impl std::str::FromStr for Deserializer {
+impl core::str::FromStr for Deserializer {
     type Err = Error;
 
     /// Parses a document from a &str

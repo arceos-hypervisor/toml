@@ -5,6 +5,7 @@
 //!
 //! [serde]: https://serde.rs/
 
+#![no_std]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![warn(missing_docs)]
 // Makes rustc abort compilation if there are any unsafe blocks in the crate.
@@ -14,6 +15,8 @@
 #![forbid(unsafe_code)]
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
+
+extern crate alloc;
 
 mod spanned;
 pub use crate::spanned::Spanned;

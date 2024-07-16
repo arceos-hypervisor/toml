@@ -1,4 +1,4 @@
-use std::iter::FromIterator;
+use core::iter::FromIterator;
 
 use snapbox::assert_data_eq;
 use snapbox::prelude::*;

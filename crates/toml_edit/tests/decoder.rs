@@ -7,7 +7,7 @@ impl toml_test_harness::Decoder for Decoder {
     }
 
     fn decode(&self, data: &[u8]) -> Result<toml_test_harness::Decoded, toml_test_harness::Error> {
-        let data = std::str::from_utf8(data).map_err(toml_test_harness::Error::new)?;
+        let data = core::str::from_utf8(data).map_err(toml_test_harness::Error::new)?;
         let document = data
             .parse::<toml_edit::DocumentMut>()
             .map_err(toml_test_harness::Error::new)?;

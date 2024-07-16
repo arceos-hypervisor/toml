@@ -10,6 +10,8 @@ use crate::{Array, Item, RawString, Value};
 
 use crate::parser::prelude::*;
 
+use alloc::vec::Vec;
+
 // ;; Array
 
 // array = array-open array-values array-close
@@ -56,7 +58,7 @@ pub(crate) fn array_values<'i>(
                 })),
             ws_comment_newline.span(),
         )
-            .try_map::<_, _, std::str::Utf8Error>(|(array, trailing)| {
+            .try_map::<_, _, core::str::Utf8Error>(|(array, trailing)| {
                 let (mut array, comma) = array.unwrap_or_default();
                 array.set_trailing_comma(comma);
                 array.set_trailing(RawString::with_span(trailing));
@@ -84,6 +86,8 @@ pub(crate) fn array_value<'i>(
 #[cfg(feature = "parse")]
 #[cfg(feature = "display")]
 mod test {
+    use alloc::{borrow::ToOwned, string::ToString};
+
     use super::*;
 
     #[test]
@@ -124,7 +128,7 @@ mod test {
             r#"[ { x = 1, a = "2" }, {a = "a",b = "b",     c =    "c"} ]"#,
         ];
         for input in inputs {
-            dbg!(input);
+            // dbg!(input);
             let mut parsed = array(Default::default()).parse(new_input(input));
             if let Ok(parsed) = &mut parsed {
                 parsed.despan(input);
@@ -137,7 +141,7 @@ mod test {
     fn invalid_arrays() {
         let invalid_inputs = [r#"["#, r#"[,]"#, r#"[,2]"#, r#"[1e165,,]"#];
         for input in invalid_inputs {
-            dbg!(input);
+            // dbg!(input);
             let mut parsed = array(Default::default()).parse(new_input(input));
             if let Ok(parsed) = &mut parsed {
                 parsed.despan(input);

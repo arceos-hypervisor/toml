@@ -1,6 +1,6 @@
-use std::cell::RefCell;
+use core::cell::RefCell;
 #[allow(unused_imports)]
-use std::ops::DerefMut;
+use core::ops::DerefMut;
 
 use winnow::combinator::cut_err;
 use winnow::combinator::delimited;

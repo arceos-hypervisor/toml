@@ -86,7 +86,7 @@ pub(crate) fn value<'i>(check: RecursionCheck) -> impl Parser<Input<'i>, Value, 
     }
 }
 
-fn apply_raw(mut val: Value, span: std::ops::Range<usize>) -> Result<Value, std::str::Utf8Error> {
+fn apply_raw(mut val: Value, span: core::ops::Range<usize>) -> Result<Value, core::str::Utf8Error> {
     match val {
         Value::String(ref mut f) => {
             let raw = RawString::with_span(span);
@@ -123,6 +123,8 @@ fn apply_raw(mut val: Value, span: std::ops::Range<usize>) -> Result<Value, std:
 #[cfg(feature = "parse")]
 #[cfg(feature = "display")]
 mod test {
+    use alloc::string::ToString;
+
     use super::*;
 
     #[test]

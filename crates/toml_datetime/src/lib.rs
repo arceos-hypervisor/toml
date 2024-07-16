@@ -2,6 +2,7 @@
 //!
 //! [TOML]: https://github.com/toml-lang/toml
 
+#![no_std]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![warn(missing_docs)]
 // Makes rustc abort compilation if there are any unsafe blocks in the crate.
@@ -11,6 +12,9 @@
 #![forbid(unsafe_code)]
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
+#![feature(error_in_core)]
+
+extern crate alloc;
 
 mod datetime;
 

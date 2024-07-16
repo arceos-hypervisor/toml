@@ -4,6 +4,7 @@ use winnow::combinator::separated;
 use winnow::combinator::trace;
 use winnow::token::one_of;
 
+use alloc::vec::Vec;
 use crate::key::Key;
 use crate::parser::error::CustomError;
 use crate::parser::key::key;
@@ -168,6 +169,8 @@ fn keyval<'i>(
 #[cfg(feature = "parse")]
 #[cfg(feature = "display")]
 mod test {
+    use alloc::{borrow::ToOwned, string::ToString};
+
     use super::*;
 
     #[test]
@@ -180,7 +183,7 @@ mod test {
             r#"{ hello.world = "a" }"#,
         ];
         for input in inputs {
-            dbg!(input);
+            // dbg!(input);
             let mut parsed = inline_table(Default::default()).parse(new_input(input));
             if let Ok(parsed) = &mut parsed {
                 parsed.despan(input);
@@ -193,7 +196,7 @@ mod test {
     fn invalid_inline_tables() {
         let invalid_inputs = [r#"{a = 1e165"#, r#"{ hello = "world", a = 2, hello = 1}"#];
         for input in invalid_inputs {
-            dbg!(input);
+            // dbg!(input);
             let mut parsed = inline_table(Default::default()).parse(new_input(input));
             if let Ok(parsed) = &mut parsed {
                 parsed.despan(input);

@@ -1,9 +1,10 @@
 use serde::de::IntoDeserializer;
+use crate::alloc::borrow::ToOwned;
 
 use crate::de::Error;
 
 pub(crate) struct TableDeserializer {
-    span: Option<std::ops::Range<usize>>,
+    span: Option<core::ops::Range<usize>>,
     items: crate::table::KeyValuePairs,
 }
 
@@ -117,7 +118,7 @@ impl crate::InlineTable {
 
 pub(crate) struct TableMapAccess {
     iter: indexmap::map::IntoIter<crate::InternalString, crate::table::TableKeyValue>,
-    span: Option<std::ops::Range<usize>>,
+    span: Option<core::ops::Range<usize>>,
     value: Option<(crate::Key, crate::Item)>,
 }
 

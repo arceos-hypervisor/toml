@@ -3,7 +3,7 @@
 use toml_edit::DocumentMut;
 
 libfuzzer_sys::fuzz_target!(|data: &[u8]| -> libfuzzer_sys::Corpus {
-    let Ok(data) = std::str::from_utf8(data) else {
+    let Ok(data) = core::str::from_utf8(data) else {
         return libfuzzer_sys::Corpus::Reject;
     };
 

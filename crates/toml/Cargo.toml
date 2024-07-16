@@ -40,7 +40,8 @@ display = ["dep:toml_edit", "toml_edit?/display"]
 preserve_order = ["indexmap"]
 
 [dependencies]
-serde = "1.0.145"
+serde = { version = "1.0.145", default-features = false, features = ["alloc"] }
+hashbrown = "0.14.5"
 indexmap = { version = "2.0.0", optional = true }
 toml_edit = { version = "0.22.15", path = "../toml_edit", default-features = false, features = ["serde"], optional = true }
 toml_datetime = { version = "0.6.6", path = "../toml_datetime", features = ["serde"] }

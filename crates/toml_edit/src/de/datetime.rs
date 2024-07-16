@@ -1,3 +1,4 @@
+use alloc::string::ToString;
 use serde::de::value::BorrowedStrDeserializer;
 use serde::de::IntoDeserializer;
 

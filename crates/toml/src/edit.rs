@@ -4,6 +4,9 @@ pub(crate) mod de {
 }
 
 #[cfg(not(feature = "parse"))]
+use alloc::string::String;
+
+#[cfg(not(feature = "parse"))]
 pub(crate) mod de {
     /// Errors that can occur when deserializing a type.
     #[derive(Debug, Clone, PartialEq, Eq)]
@@ -24,7 +27,7 @@ pub(crate) mod de {
     impl serde::de::Error for Error {
         fn custom<T>(msg: T) -> Self
         where
-            T: std::fmt::Display,
+            T: core::fmt::Display,
         {
             Error {
                 inner: msg.to_string(),
@@ -32,13 +35,13 @@ pub(crate) mod de {
         }
     }
 
-    impl std::fmt::Display for Error {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    impl core::fmt::Display for Error {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
             self.inner.fmt(f)
         }
     }
 
-    impl std::error::Error for Error {}
+    impl core::error::Error for Error {}
 }
 
 #[cfg(feature = "display")]
@@ -60,7 +63,7 @@ pub(crate) mod ser {
     impl Error {
         pub(crate) fn custom<T>(msg: T) -> Self
         where
-            T: std::fmt::Display,
+            T: core::fmt::Display,
         {
             Error::Custom(msg.to_string())
         }
@@ -69,14 +72,14 @@ pub(crate) mod ser {
     impl serde::ser::Error for Error {
         fn custom<T>(msg: T) -> Self
         where
-            T: std::fmt::Display,
+            T: core::fmt::Display,
         {
             Self::custom(msg)
         }
     }
 
-    impl std::fmt::Display for Error {
-        fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    impl core::fmt::Display for Error {
+        fn fmt(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
             match self {
                 Self::UnsupportedType(Some(t)) => write!(formatter, "unsupported {t} type"),
                 Self::UnsupportedType(None) => write!(formatter, "unsupported rust type"),
@@ -87,5 +90,5 @@ pub(crate) mod ser {
         }
     }
 
-    impl std::error::Error for Error {}
+    impl core::error::Error for Error {}
 }

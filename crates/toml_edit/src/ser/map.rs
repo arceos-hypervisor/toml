@@ -612,7 +612,7 @@ impl serde::ser::SerializeTupleVariant for SerializeVariant<SerializeValueArray>
 
     fn end(self) -> Result<Self::Ok, Self::Error> {
         let inner = serde::ser::SerializeSeq::end(self.inner)?;
-        let mut items = crate::table::KeyValuePairs::new();
+        let mut items = crate::table::KeyValuePairs::with_hasher(ahash::RandomState::new());
         let kv = crate::table::TableKeyValue::new(
             crate::Key::new(self.variant),
             crate::Item::Value(inner),
@@ -639,7 +639,7 @@ impl serde::ser::SerializeStructVariant for SerializeVariant<SerializeMap> {
     #[inline]
     fn end(self) -> Result<Self::Ok, Self::Error> {
         let inner = serde::ser::SerializeStruct::end(self.inner)?;
-        let mut items = crate::table::KeyValuePairs::new();
+        let mut items = crate::table::KeyValuePairs::with_hasher(ahash::RandomState::new());
         let kv = crate::table::TableKeyValue::new(
             crate::Key::new(self.variant),
             crate::Item::Value(inner),

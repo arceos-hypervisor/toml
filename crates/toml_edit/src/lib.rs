@@ -70,11 +70,17 @@
 //! [`toml`]: https://docs.rs/toml/latest/toml/
 
 // https://github.com/Marwes/combine/issues/172
+#![no_std]
 #![recursion_limit = "256"]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![warn(missing_docs)]
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
+#![feature(error_in_core)]
+#![feature(core_intrinsics)]
+
+#[macro_use]
+extern crate alloc;
 
 mod array;
 mod array_of_tables;
@@ -132,7 +138,7 @@ pub(crate) mod private {
     pub trait Sealed {}
     impl Sealed for usize {}
     impl Sealed for str {}
-    impl Sealed for String {}
+    impl Sealed for alloc::string::String {}
     impl Sealed for i64 {}
     impl Sealed for f64 {}
     impl Sealed for bool {}

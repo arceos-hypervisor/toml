@@ -1,4 +1,4 @@
-use std::ops::RangeInclusive;
+use core::ops::RangeInclusive;
 
 use crate::parser::error::CustomError;
 use crate::parser::prelude::*;

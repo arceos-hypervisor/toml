@@ -1,6 +1,7 @@
-use std::error;
-use std::fmt;
-use std::str::{self, FromStr};
+use core::error;
+use core::fmt;
+use core::str::{self, FromStr};
+use crate::alloc::string::ToString;
 
 #[cfg(feature = "serde")]
 use serde::{de, ser};
@@ -232,7 +233,7 @@ impl fmt::Display for Time {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:02}:{:02}:{:02}", self.hour, self.minute, self.second)?;
         if self.nanosecond != 0 {
-            let s = format!("{:09}", self.nanosecond);
+            let s = alloc::format!("{:09}", self.nanosecond);
             write!(f, ".{}", s.trim_end_matches('0'))?;
         }
         Ok(())

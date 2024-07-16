@@ -1,11 +1,15 @@
 //! Definition of a TOML [value][Value]
 
-use std::collections::{BTreeMap, HashMap};
-use std::fmt;
-use std::hash::Hash;
-use std::mem::discriminant;
-use std::ops;
-use std::vec;
+use alloc::borrow::ToOwned;
+use alloc::collections::BTreeMap;
+use alloc::string::{String, ToString};
+use alloc::vec;
+use alloc::vec::Vec;
+use core::fmt;
+use core::hash::Hash;
+use core::mem::discriminant;
+use core::ops;
+use hashbrown::HashMap;
 
 use serde::de;
 use serde::de::IntoDeserializer;
@@ -388,7 +392,7 @@ impl fmt::Display for Value {
 }
 
 #[cfg(feature = "parse")]
-impl std::str::FromStr for Value {
+impl core::str::FromStr for Value {
     type Err = crate::de::Error;
     fn from_str(s: &str) -> Result<Value, Self::Err> {
         crate::from_str(s)
@@ -924,7 +928,8 @@ impl ser::Serializer for ValueSerializer {
     fn serialize_f64(self, mut value: f64) -> Result<Value, crate::ser::Error> {
         // Discard sign of NaN. See ValueSerializer::serialize_f64.
         if value.is_nan() {
-            value = value.copysign(1.0);
+            // value = value.copysign(1.0);
+            value = unsafe { core::intrinsics::copysignf64(value, 1.0) };
         }
         Ok(Value::Float(value))
     }

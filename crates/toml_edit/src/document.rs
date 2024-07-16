@@ -1,4 +1,6 @@
-use std::str::FromStr;
+use alloc::borrow::ToOwned;
+use alloc::string::String;
+use core::str::FromStr;
 
 use crate::table::Iter;
 use crate::{Item, RawString, Table};
@@ -97,7 +99,7 @@ impl FromStr for ImDocument<String> {
     }
 }
 
-impl<S> std::ops::Deref for ImDocument<S> {
+impl<S> core::ops::Deref for ImDocument<S> {
     type Target = Table;
 
     fn deref(&self) -> &Self::Target {
@@ -177,7 +179,7 @@ impl FromStr for DocumentMut {
     }
 }
 
-impl std::ops::Deref for DocumentMut {
+impl core::ops::Deref for DocumentMut {
     type Target = Table;
 
     fn deref(&self) -> &Self::Target {
@@ -185,7 +187,7 @@ impl std::ops::Deref for DocumentMut {
     }
 }
 
-impl std::ops::DerefMut for DocumentMut {
+impl core::ops::DerefMut for DocumentMut {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.as_table_mut()
     }

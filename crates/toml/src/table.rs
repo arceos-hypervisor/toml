@@ -1,4 +1,5 @@
-use std::fmt;
+use core::fmt;
+use alloc::string::String;
 
 use serde::de;
 use serde::ser;
@@ -51,7 +52,7 @@ impl fmt::Display for Table {
 }
 
 #[cfg(feature = "parse")]
-impl std::str::FromStr for Table {
+impl core::str::FromStr for Table {
     type Err = crate::de::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         crate::from_str(s)

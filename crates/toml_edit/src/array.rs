@@ -1,5 +1,7 @@
-use std::iter::FromIterator;
-use std::mem;
+use core::iter::FromIterator;
+use core::mem;
+use alloc::vec::Vec;
+use alloc::boxed::Box;
 
 use crate::repr::Decor;
 use crate::value::{DEFAULT_LEADING_VALUE_DECOR, DEFAULT_VALUE_DECOR};
@@ -15,7 +17,7 @@ pub struct Array {
     trailing_comma: bool,
     // prefix before `[` and suffix after `]`
     decor: Decor,
-    pub(crate) span: Option<std::ops::Range<usize>>,
+    pub(crate) span: Option<core::ops::Range<usize>>,
     // always Vec<Item::Value>
     pub(crate) values: Vec<Item>,
 }
@@ -90,7 +92,7 @@ impl Array {
     /// The location within the original document
     ///
     /// This generally requires an [`ImDocument`][crate::ImDocument].
-    pub fn span(&self) -> Option<std::ops::Range<usize>> {
+    pub fn span(&self) -> Option<core::ops::Range<usize>> {
         self.span.clone()
     }
 
@@ -341,15 +343,15 @@ impl Array {
     #[inline]
     pub fn sort_by<F>(&mut self, mut compare: F)
     where
-        F: FnMut(&Value, &Value) -> std::cmp::Ordering,
+        F: FnMut(&Value, &Value) -> core::cmp::Ordering,
     {
         self.values.sort_by(move |lhs, rhs| {
             let lhs = lhs.as_value();
             let rhs = rhs.as_value();
             match (lhs, rhs) {
-                (None, None) => std::cmp::Ordering::Equal,
-                (Some(_), None) => std::cmp::Ordering::Greater,
-                (None, Some(_)) => std::cmp::Ordering::Less,
+                (None, None) => core::cmp::Ordering::Equal,
+                (Some(_), None) => core::cmp::Ordering::Greater,
+                (None, Some(_)) => core::cmp::Ordering::Less,
                 (Some(lhs), Some(rhs)) => compare(lhs, rhs),
             }
         });
@@ -392,8 +394,8 @@ impl Array {
 }
 
 #[cfg(feature = "display")]
-impl std::fmt::Display for Array {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Array {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         crate::encode::encode_array(self, f, None, ("", ""))
     }
 }

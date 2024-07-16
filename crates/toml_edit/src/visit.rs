@@ -78,6 +78,7 @@ use crate::{
     Array, ArrayOfTables, Datetime, DocumentMut, Formatted, InlineTable, Item, Table, TableLike,
     Value,
 };
+use alloc::string::String;
 
 /// Document tree traversal to mutate an exclusive borrow of a document tree in-place.
 ///
